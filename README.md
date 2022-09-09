@@ -1,5 +1,4 @@
 # neuPrint-Build-Update
-=====
 Collection of scripts to build and update the neuPrint neo4j database
 
 ## Scripts to Export data from DVID to build a neuPrint Database
