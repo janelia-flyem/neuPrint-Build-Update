@@ -654,10 +654,10 @@ class NeuPrintUpdater:
         links2delete.extend(conn_delete_edges)
         links2delete.append([newid, newid]) # delete any autapse that is created
         linkdel_query = f"UNWIND {links2delete} AS LINK MATCH (n)-[x]->(m) WHERE id(n)=LINK[0] AND id(m)=LINK[1] DELETE x"
-        try:
-            txn.query(linkdel_query)
-        except Exception as ex:
-            print(ex)
+        #try:
+        txn.query(linkdel_query)
+        #except Exception as ex:
+        #    print(ex)
             
         ssdel_query = f"UNWIND {ss_delete} AS ss MATCH (n) WHERE id(n)=ss DETACH DELETE n"
         txn.query(ssdel_query)
