@@ -1,12 +1,12 @@
 
-python generate_Synapse_Connections_All_ftr.py mb6_synapse_data_example.ftr mb6_synapse_connections_example.ftr > All_Neuprint_Synapse_Connections_mb6.csv
+python generate_Synapse_Connections_All_ftr.py data/mb6_synapse_data_example.ftr data/mb6_synapse_connections_example.ftr > All_Neuprint_Synapse_Connections_mb6.csv
 
 python ../dvid_to_neuprint/detect_downstream_synapses.py All_Neuprint_Synapse_Connections_mb6.csv > downstream_synapses.csv
 
 python ../dvid_to_neuprint/detect_downstream_roiInfo.py All_Neuprint_Synapse_Connections_mb6.csv > downstream_synapses_roiInfo.csv
 
 # Create Synapse csv
-python generate_Neuprint_Synapses_ftr.py mb6_synapse_data_example.ftr mushroombody all_ROIs.txt > Neuprint_Synapses_mb6.csv
+python generate_Neuprint_Synapses_ftr.py data/mb6_synapse_data_example.ftr mushroombody data/all_ROIs.txt > Neuprint_Synapses_mb6.csv
 
 # Create Synapse Connections csv
 python ../dvid_to_neuprint/generate_Synapse_Connections.py All_Neuprint_Synapse_Connections_mb6.csv > Neuprint_Synapse_Connections_mb6.csv
@@ -27,13 +27,13 @@ python ../dvid_to_neuprint/generate_Neuron_to_SynapseSet.py All_Neuprint_Synapse
 python ../dvid_to_neuprint/generate_SynapseSet_to_SynapseSet.py All_Neuprint_Synapse_Connections_mb6.csv > Neuprint_SynapseSet_to_SynapseSet_mb6.csv
 
 # generate roiInfo, pre, post counts
-python generate_Neurons_roiInfo_ftr.py mb6_synapse_data_example.ftr > synapse_bodies_mb6.csv
+python generate_Neurons_roiInfo_ftr.py data/mb6_synapse_data_example.ftr > synapse_bodies_mb6.csv
 
 # generate Neurons
-python generate_Neurons_ftr.py synapse_bodies_mb6.csv mb6_neuron_data_example.ftr neurons.yaml > Neuprint_Neurons_mb6.csv
+python generate_Neurons_ftr.py synapse_bodies_mb6.csv data/mb6_neuron_data_example.ftr config/neurons.yaml > Neuprint_Neurons_mb6.csv
 
 # generate Neuprint Meta
-python generate_Neuprint_Meta_ftr.py mb6_synapse_data_example.ftr meta.yaml > Neuprint_Meta_mb6.csv
+python generate_Neuprint_Meta_ftr.py data/mb6_synapse_data_example.ftr config/meta.yaml > Neuprint_Meta_mb6.csv
 
 ./neo4j_3_5_import.sh mb6
 
