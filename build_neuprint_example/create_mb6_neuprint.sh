@@ -1,3 +1,4 @@
+#!/bin/bash
 
 python generate_Synapse_Connections_All_ftr.py data/mb6_synapse_data_example.ftr data/mb6_synapse_connections_example.ftr > All_Neuprint_Synapse_Connections_mb6.csv
 
@@ -34,8 +35,3 @@ python generate_Neurons_ftr.py synapse_bodies_mb6.csv data/mb6_neuron_data_examp
 
 # generate Neuprint Meta
 python generate_Neuprint_Meta_ftr.py data/mb6_synapse_data_example.ftr config/meta.yaml > Neuprint_Meta_mb6.csv
-
-./neo4j_3_5_import.sh mb6
-
-cat index-mb6.cypher | ./bin/cypher-shell -u neo4j  --format plain
-cat warmup-cache.cypher | ./bin/cypher-shell -u neo4j  --format plain

@@ -54,3 +54,25 @@ To run these scripts you will need to install the following python packages and 
 7762  17143713            None    None     None    None        2015
 7763  17144961            None    None     None    None      219314
 ```
+
+## Create csv neuprint files
+
+
+
+## Build neo4j database
+Run either of these shell scripts that will generate the neo4j-admin command line that defines the nodes and relationships for neuprint and build the database.
+```
+# use this if using neo4j 3.5 or greater
+./neo4j_3_5_import.sh mb6
+```
+
+```
+# use this shell script if using neo4j 4.4 or greater
+./neo4j_4_4_import.sh mb6
+```
+
+After building the neo4j neuprint database, launch the database in neo4j. Next you will need to build the indices and warmup the page cache by running these commands with the supplied cypher.
+```
+cat index-mb6.cypher | ./bin/cypher-shell -u neo4j  --format plain
+cat warmup-cache.cypher | ./bin/cypher-shell -u neo4j  --format plain
+```
