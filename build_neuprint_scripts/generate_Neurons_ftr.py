@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
     bodiesList = open(bodies_syn_file,'r')
 
-    header = '":ID(Body-ID)","bodyId:long","pre:int","post:int","upstream:int","downstream:int","status:string","statusLabel:string","cropped:boolean","instance:string","notes:string","type:string","cellBodyFiber:string","somaLocation:point{srid:9157}","somaRadius:float","size:long","roiInfo:string",":LABEL"'
+    header = '":ID(Body-ID)","bodyId:long","pre:int","post:int","upstream:int","downstream:int","synweight:int","status:string","statusLabel:string","cropped:boolean","instance:string","notes:string","type:string","cellBodyFiber:string","somaLocation:point{srid:9157}","somaRadius:float","size:long","roiInfo:string",":LABEL"'
     for roi in all_rois:
         header = header + ',"' + roi + ':boolean"'
 
@@ -127,7 +127,8 @@ if __name__ == '__main__':
             if bodyID in downstream_lookup:
                 downstream = str(downstream_lookup[bodyID])
 
-            #roiInfo = bodyData[3]
+            total_synweight = int(upstream) + int(downstream)
+            
             roiInfo = bodyData[3]
             if len(roiInfo) > 0:
                 roiInfo_str = bodyData[3].replace('"','""')
@@ -135,19 +136,29 @@ if __name__ == '__main__':
                 roiInfo = "{}"
                 roiInfo_str = "{}"
 
-            if bodyID in downstream_roiInfo_lookup:
-                downstream_roiInfo = downstream_roiInfo_lookup[bodyID]
+            if len(roiInfo) > 0:
+                downstream_roiInfo = {}
+                if bodyID in downstream_roiInfo_lookup:
+                    downstream_roiInfo = downstream_roiInfo_lookup[bodyID]
                 roiInfo_json = json.loads(roiInfo)
                 for roiName in roiInfo_json:
                     roiData = roiInfo_json[roiName]
+                    roisynweight = 0
                     if roiName in downstream_roiInfo:
                         dns_data = downstream_roiInfo[roiName]
                         roiData["downstream"] = dns_data["downstream"]
+                        roisynweight += dns_data["downstream"]
                     if "post" in roiData:
                         roiData["upstream"] = roiData["post"]
+                        roisynweight += roiData["post"]
+                    if roisynweight > 0:
+                        roiData["synweight"] = roisynweight
                 roiInfo_tmp = json.dumps(roiInfo_json)
                 roiInfo_str = roiInfo_tmp.replace('"','""')
-
+            else:
+                roiInfo = "{}"
+                roiInfo_str = "{}"
+            
             somaLocation = ""
             somaLocationX = ""
             somaLocationY = ""
@@ -287,4 +298,4 @@ if __name__ == '__main__':
                     status = "Assign"
                     statusLabel = "0.5assign"
                     
-            print(bodyID + "," + bodyID + "," + pre_syns + "," + post_syns + "," + upstream + "," + downstream + "," + status + "," + statusLabel + "," + cropped + "," + instance + "," + synonyms + "," + neuronType + "," + primaryNeurite + "," + somaLocation + "," + somaRadius + "," +  bodySize + ",\"" + roiInfo_str +  "\",Segment;" + dataset + "_Segment" + is_hemibrain_Neuron + roi_booleans)
+            print(bodyID + "," + bodyID + "," + pre_syns + "," + post_syns + "," + upstream + "," + downstream + "," + str(total_synweight) + "," + status + "," + statusLabel + "," + cropped + "," + instance + "," + synonyms + "," + neuronType + "," + primaryNeurite + "," + somaLocation + "," + somaRadius + "," +  bodySize + ",\"" + roiInfo_str +  "\",Segment;" + dataset + "_Segment" + is_hemibrain_Neuron + roi_booleans)
